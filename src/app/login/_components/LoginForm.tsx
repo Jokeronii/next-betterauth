@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 export default function LoginForm() {
   const [isPending, startTransition] = useTransition();
   const signInGoogle = async () => {
-    //do trasnsition
+    //do transition
     startTransition(async () => {
       await authClient.signIn.social({
         provider: 'google',
