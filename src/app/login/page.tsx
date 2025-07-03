@@ -1,27 +1,18 @@
-'use client';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 
-import { authClient } from '@/lib/auth-client';
+import LoginForm from './_components/LoginForm';
+import { redirect } from 'next/navigation';
 
-export default function LoginPage() {
-  const signInGoogle = async () => {
-    await authClient.signIn.social({
-      provider: 'google',
-      callbackURL: '/dashboard',
-      fetchOptions: {
-        onSuccess: (ctx) => {
-          //redirect to the dashboard or sign in page
-          alert('success');
-        },
-        onError: (ctx) => {
-          // display the error message
-          alert(ctx.error.message);
-        },
-      },
-    });
-  };
-  return (
-    <div>
-      <button onClick={signInGoogle}>signIn with google</button>
-    </div>
-  );
+export default async function LoginPage() {
+  //check session
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (session) {
+    redirect('/');
+  }
+
+  return <LoginForm />;
 }

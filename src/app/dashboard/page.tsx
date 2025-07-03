@@ -1,24 +1,22 @@
-'use client';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
+import LogoutButton from './_components/LogoutButton';
+import { redirect } from 'next/navigation';
 
-import { authClient } from '@/lib/auth-client';
-import { useRouter } from 'next/navigation';
+export default async function Dashboard() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-export default function Dashboard() {
-  const router = useRouter();
-  const signOut = async () => {
-    await authClient.signOut({
-      fetchOptions: {
-        onSuccess: () => {
-          router.push('/login'); // redirect to login page
-        },
-      },
-    });
-  };
+  if (!session) {
+    redirect('/login');
+  }
 
   return (
     <div>
-      <h1>dashboard</h1>
-      <button onClick={signOut}>sign out</button>
+      <h1>Dashboard</h1>
+      <p>{session?.user.name}</p>
+      <LogoutButton />
     </div>
   );
 }
