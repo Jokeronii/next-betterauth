@@ -8,19 +8,17 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input';
 
 const userSchema = z.object({
-  name: z.string().min(2, 'Name at least 2 characters').max(20),
   email: z.string().email('Invalid email'),
   password: z.string().min(8, 'Password at least 8 characters').max(16, 'Password at most 16 characters'),
 });
 
-export default function SignUpForm() {
+export default function SignInForm() {
   //const form = useForm() not destructuring
   //const {register} = useForm() use destructuring instead of calling one by one
   //create form with type: typeOf userSchema
   const form = useForm<z.infer<typeof userSchema>>({
     resolver: zodResolver(userSchema),
     defaultValues: {
-      name: '',
       email: '',
       password: '',
     },
@@ -29,26 +27,12 @@ export default function SignUpForm() {
   const { handleSubmit, control } = form;
 
   const onSubmit = handleSubmit((values) => {
-    alert(`name ${values.name} email ${values.email} password ${values.password}`);
+    alert(`email ${values.email} password ${values.password}`);
   });
 
   return (
     <Form {...form}>
       <form onSubmit={onSubmit} className="space-y-8">
-        <FormField
-          control={control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="shadcn" {...field} />
-              </FormControl>
-              <FormDescription>This is your public display name.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <FormField
           control={control}
           name="email"
@@ -58,11 +42,11 @@ export default function SignUpForm() {
               <FormControl>
                 <Input placeholder="example@me.com" {...field} />
               </FormControl>
-              <FormDescription>This is your public display name.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+
         <FormField
           control={control}
           name="password"
@@ -72,7 +56,6 @@ export default function SignUpForm() {
               <FormControl>
                 <Input placeholder="*******" {...field} />
               </FormControl>
-              <FormDescription>This is your public display name.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
