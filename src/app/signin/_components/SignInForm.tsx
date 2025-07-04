@@ -50,8 +50,27 @@ export default function SignInForm() {
 
   const { handleSubmit, control } = form;
 
-  const onSubmit = handleSubmit((values) => {
-    alert(`email ${values.email} password ${values.password}`);
+  const onSubmit = handleSubmit(async (values) => {
+    const { email, password } = values;
+    const { data, error } = await authClient.signIn.email(
+      {
+        email,
+        password,
+        callbackURL: '/dashboard',
+      },
+      {
+        onRequest(context) {
+          toast.loading('Signing in...');
+        },
+        onSuccess(context) {
+          toast.success('success');
+        },
+        onError(context) {
+          toast.error(context.error.message);
+        },
+      }
+    );
+    // alert(`email ${values.email} password ${values.password}`);
   });
 
   return (

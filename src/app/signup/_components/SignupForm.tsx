@@ -8,6 +8,8 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input';
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
+import { authClient } from '@/lib/auth-client';
+import { toast } from 'sonner';
 
 const userSchema = z.object({
   name: z.string().min(2, 'Name at least 2 characters').max(20),
@@ -28,10 +30,34 @@ export default function SignUpForm() {
     },
   });
 
-  const { handleSubmit, control } = form;
+  const {
+    handleSubmit,
+    control,
+    formState: { isSubmitting },
+  } = form;
 
-  const onSubmit = handleSubmit((values) => {
-    alert(`name ${values.name} email ${values.email} password ${values.password}`);
+  const onSubmit = handleSubmit(async (values) => {
+    const { name, email, password } = values;
+    const { data, error } = await authClient.signUp.email(
+      {
+        name,
+        email,
+        password,
+        callbackURL: '/signin',
+      },
+      {
+        onRequest(context) {
+          toast.loading('Signing up...');
+        },
+        onSuccess(context) {
+          toast.success('success');
+          form.reset();
+        },
+        onError(context) {
+          toast.error(context.error.message);
+        },
+      }
+    );
   });
 
   return (
@@ -83,8 +109,8 @@ export default function SignUpForm() {
                   </FormItem>
                 )}
               />
-              <Button className="w-full" type="submit">
-                Sign Up
+              <Button disabled={isSubmitting} className="w-full" type="submit">
+                {isSubmitting ? 'Signing up...' : 'Sign Up'}
               </Button>
             </form>
           </Form>
