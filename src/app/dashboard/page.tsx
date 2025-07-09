@@ -2,14 +2,18 @@ import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import LogoutButton from './_components/LogoutButton';
 import { redirect } from 'next/navigation';
+import { addTodo, getData } from '@/actions/todoAction';
+import AddTodo from '@/components/addTodo';
 
 export default async function Dashboard() {
+  const todos = await getData();
+
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
   if (!session) {
-    redirect('/login');
+    redirect('/signin');
   }
 
   return (
@@ -17,6 +21,9 @@ export default async function Dashboard() {
       <h1>Dashboard</h1>
       <h2>Welcome</h2>
       <p>{session?.user.name}</p>
+      <AddTodo addTodo={addTodo} />
+      <h1>Todo item</h1>
+      <pre>{JSON.stringify(todos, null, 4)}</pre>
       <LogoutButton />
     </div>
   );

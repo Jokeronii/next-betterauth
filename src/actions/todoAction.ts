@@ -1,3 +1,5 @@
+'use server';
+
 import { db } from '@/db/drizzle';
 import { todo } from '@/db/schemas/todo';
 import { eq, not } from 'drizzle-orm';
@@ -13,18 +15,19 @@ export const getData = async () => {
   }
 };
 
-export const addTodo = async (id: number, text: string) => {
+export const addTodo = async (text: string) => {
   try {
     await db.insert(todo).values({
-      id: id,
+      // id: id,
       text: text,
     });
+    revalidatePath('/dashboard');
   } catch (error) {
-    console.log(error);
+    console.log('error in add todo' + error);
   }
 };
 
-export const deleteTodo = async (id: number) => {
+export const deleteTodo = async (id: string) => {
   try {
     await db.delete(todo).where(eq(todo.id, id));
     revalidatePath('/dashboard');
@@ -33,7 +36,7 @@ export const deleteTodo = async (id: number) => {
   }
 };
 
-export const toggleTodo = async (id: number) => {
+export const toggleTodo = async (id: string) => {
   await db
     .update(todo)
     .set({
@@ -43,7 +46,7 @@ export const toggleTodo = async (id: number) => {
   revalidatePath('/dashboard');
 };
 
-export const editTodo = async (id: number, text: string) => {
+export const editTodo = async (id: string, text: string) => {
   await db
     .update(todo)
     .set({
