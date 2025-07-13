@@ -4,14 +4,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
-import { Input } from './ui/input';
 import { Button } from './ui/button';
+import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Textarea } from './ui/textarea';
 
 interface AddTodoProps {
   addTodo: (text: string) => Promise<void>;
 }
 
-const todoSchema = z.object({
+export const todoSchema = z.object({
   id: z.string(),
   text: z.string().min(1, 'Text must be at least 1 character').max(500, 'Text must be at most 500 characters'),
   done: z.boolean().default(false),
@@ -42,27 +43,30 @@ export default function AddTodo({ addTodo }: AddTodoProps) {
 
   return (
     <div>
-      <h1>add todo</h1>
-      <Form {...form}>
-        <form onSubmit={onSubmit} className="space-y-10">
-          <FormField
-            control={control}
-            name="text"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Todo Text</FormLabel>
-                <FormControl>
-                  <Input placeholder="input your todo text here..." {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button disabled={isSubmitting} className="w-full" type="submit">
-            {isSubmitting ? 'Adding Todo...' : 'Add Todo'}
-          </Button>
-        </form>
-      </Form>
+      <Card>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={onSubmit} className="space-y-10">
+              <FormField
+                control={control}
+                name="text"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Todo Text</FormLabel>
+                    <FormControl>
+                      <Textarea className="resize-none" placeholder="input your todo text here..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button disabled={isSubmitting} className="w-full" type="submit">
+                {isSubmitting ? 'Adding Todo...' : 'Add Todo'}
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

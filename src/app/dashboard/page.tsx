@@ -4,6 +4,7 @@ import LogoutButton from './_components/LogoutButton';
 import { redirect } from 'next/navigation';
 import { addTodo, getData } from '@/actions/todoAction';
 import AddTodo from '@/components/addTodo';
+import TodoTable from '@/components/todoTable';
 
 export default async function Dashboard() {
   const todos = await getData();
@@ -20,10 +21,17 @@ export default async function Dashboard() {
     <div>
       <h1>Dashboard</h1>
       <h2>Welcome</h2>
-      <p>{session?.user.name}</p>
-      <AddTodo addTodo={addTodo} />
-      <h1>Todo item</h1>
-      <pre>{JSON.stringify(todos, null, 4)}</pre>
+      <p>welcome, {session?.user.name}</p>
+      <div className="flex flex-row">
+        <div className="p-6 basis-1/3">
+          <AddTodo addTodo={addTodo} />
+        </div>
+        <div className="p-6 basis-2/3">
+          <TodoTable />
+        </div>
+      </div>
+      {/* <h1>Todo item</h1> */}
+      {/* <pre>{JSON.stringify(todos, null, 4)}</pre> */}
       <LogoutButton />
     </div>
   );
