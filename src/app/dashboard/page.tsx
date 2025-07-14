@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { addTodo, getData } from '@/actions/todoAction';
 import AddTodo from '@/components/addTodo';
 import TodoTable from '@/components/todoTable';
+import { Button } from '@/components/ui/button';
 
 export default async function Dashboard() {
   const todos = await getData();
@@ -22,11 +23,9 @@ export default async function Dashboard() {
       <h1>Dashboard</h1>
       <h2>Welcome</h2>
       <p>welcome, {session?.user.name}</p>
+      <AddTodo addTodo={addTodo} />
       <div className="flex flex-row">
-        <div className="p-6 basis-1/3">
-          <AddTodo addTodo={addTodo} />
-        </div>
-        <div className="p-6 basis-2/3">
+        <div className="p-6 ">
           <TodoTable />
         </div>
       </div>
