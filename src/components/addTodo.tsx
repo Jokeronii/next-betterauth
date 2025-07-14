@@ -18,16 +18,17 @@ interface AddTodoProps {
 export const todoSchema = z.object({
   id: z.string(),
   text: z.string().min(1, 'Text must be at least 1 character').max(500, 'Text must be at most 500 characters'),
-  done: z.boolean().default(false),
+  done: z.boolean(),
 });
 
-const todoInputSchema = todoSchema.pick({ text: true });
+const todoInputSchema = todoSchema.pick({ text: true, done: true });
 export default function AddTodo({ addTodo }: AddTodoProps) {
   const [open, setOpen] = useState(false);
   const form = useForm<z.infer<typeof todoInputSchema>>({
     resolver: zodResolver(todoInputSchema),
     defaultValues: {
       text: '',
+      done: false,
     },
   });
 

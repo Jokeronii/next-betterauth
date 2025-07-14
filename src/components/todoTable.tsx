@@ -1,6 +1,7 @@
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { getData } from '@/actions/todoAction';
 import DeleteTodoButton from './deleteTodoButton';
+import EditTodoButton from './editTodoButton';
 
 export default async function TodoTable() {
   const todos = await getData();
@@ -29,6 +30,9 @@ export default async function TodoTable() {
             <TableCell className="text-right">{todo.updateAt?.toLocaleString()}</TableCell>
             <TableCell className="text-right">
               <DeleteTodoButton id={todo.id} />
+            </TableCell>
+            <TableCell>
+              <EditTodoButton id={todo.id} text={todo.text} done={todo.done} />
             </TableCell>
           </TableRow>
         ))}
